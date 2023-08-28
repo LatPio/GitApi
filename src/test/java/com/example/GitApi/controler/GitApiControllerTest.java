@@ -1,9 +1,10 @@
 package com.example.GitApi.controler;
 
 
-import com.example.GitApi.model.RepoOwnerBranchesShaResponse;
+import com.example.GitApi.model.responseModels.RepoOwnerBranchesShaResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -15,13 +16,16 @@ class GitApiControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    @Value("${name}")
+    private String userName;
+
     @Test
     void getOutList() {
 
         webTestClient.get().uri(uriBuilder ->
                                     uriBuilder
                                             .path("api/v1/repos")
-                                            .queryParam("userName", "latPio")
+                                            .queryParam("userName", userName)
                                             .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()

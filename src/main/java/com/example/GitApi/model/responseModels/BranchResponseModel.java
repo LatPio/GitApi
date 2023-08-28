@@ -1,4 +1,4 @@
-package com.example.GitApi.model;
+package com.example.GitApi.model.responseModels;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class GitHubOwner {
-    private String login;
+public class BranchResponseModel {
+    private String name;
+    private String lastCommitSha;
 }

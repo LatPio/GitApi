@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.example"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
@@ -16,6 +16,7 @@ configurations {
 		extendsFrom(configurations.annotationProcessor.get())
 	}
 }
+
 
 repositories {
 	mavenCentral()
@@ -36,3 +37,7 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+
+
+

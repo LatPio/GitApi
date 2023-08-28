@@ -1,4 +1,4 @@
-package com.example.GitApi.model;
+package com.example.GitApi.model.requestModels;
 
 import lombok.*;
 
