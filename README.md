@@ -41,4 +41,3 @@ Other option is to send in command prompt bellow code to restive json:
 
 `cURL -XGET http://localhost:8080/api/v1/repos?userName=<here provide userName> -H "Accept: application/json"`
 
-To this approach to work configure your computer.
