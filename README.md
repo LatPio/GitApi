@@ -8,7 +8,7 @@ SpringBoot 3, Java 17
 This step is optional, by providing your GitHub `token` you will access your private repositories. Without this step accessible are public repositories given valid GitHub Users `Login`.    
 
 1. Create a personal access token on Github - https://github.com/settings/tokens
-2. Open `src/main/resources/application.properties` and specify your `github` username in `name` property, and your personal access token in `token` property.
+2. Open `src/main/resources/application.properties` and specify your `github` username in `name` property, and your personal access token in `token` property in this format `Bearer <Your token>`.
 
 ### How run app
 First download this repository to your machine, then you can do one of below methods:

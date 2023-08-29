@@ -30,7 +30,7 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-
+	testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
 
 }
 

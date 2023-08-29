@@ -37,14 +37,5 @@ public class GitHubApiService {
                         )
                         .build()
                 ).collect(Collectors.toList());
-
-
-
-
     }
-
-
-
-
-
 }

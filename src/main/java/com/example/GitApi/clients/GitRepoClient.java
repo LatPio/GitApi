@@ -3,27 +3,28 @@ package com.example.GitApi.clients;
 import com.example.GitApi.exeption.UserNotFoundException;
 import com.example.GitApi.model.requestModels.BranchModel;
 import com.example.GitApi.model.requestModels.GitHubSearchResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
-@RequiredArgsConstructor
 public class GitRepoClient {
 
     @Value("${token}")
-    private String token;
+    public String token;
 
-    private final String GITHUB_API_URL = "https://api.github.com/";
-    private final WebClient.Builder webClientBuilder;
+    private WebClient webClientBuilder;
+
+    public GitRepoClient(WebClient.Builder builder, @Value("${url}") String baseUrl) {
+        this.webClientBuilder = builder.baseUrl(baseUrl).build();
+    }
 
     public GitHubSearchResponse getRepoListByUser(String user){
-        return webClientBuilder.build()
+        return webClientBuilder
                 .get()
-                .uri(GITHUB_API_URL+"search/repositories?q=user:"+ user)
-                .header("Authorization", getToken() )
+                .uri("/search/repositories?q=user:"+ user)
+                .header("Authorization", this.token )
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .onStatus(httpStatusCode -> httpStatusCode.value()==422,
@@ -33,19 +34,12 @@ public class GitRepoClient {
     }
 
     public BranchModel[] getRepoBranNames(String repoName, String user){
-        return webClientBuilder.build()
+        return webClientBuilder
                 .get()
-                .uri(GITHUB_API_URL+"repos/"+ user + "/"+ repoName + "/branches")
-                .header("Authorization", getToken() )
+                .uri("/repos/"+ user + "/"+ repoName + "/branches")
+                .header("Authorization", this.token )
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(BranchModel[].class).block();
     }
-
-    protected String getToken(){
-        if(token.length()>1){
-            return "Bearer "+token;
-        } else {
-        return null;
-    }}
 }
