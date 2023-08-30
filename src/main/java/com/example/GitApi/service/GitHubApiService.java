@@ -7,7 +7,6 @@ import com.example.GitApi.model.responseModels.RepoOwnerBranchesShaResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,21 +20,23 @@ public class GitHubApiService {
 
         GitHubSearchResponse repoList = gitRepoClient.getRepoListByUser(username);
 
-        return repoList.getItems().stream()
-                .filter(f -> !f.getFork())
-                .map(value -> RepoOwnerBranchesShaResponse.builder()
-                        .repository_name(value.getName())
-                        .owner_login(value.getOwner().getLogin())
-                        .branches(
-                                Arrays.stream(
-                                        gitRepoClient.getRepoBranNames(value.getName(), username))
-                                            .map(branchModel -> BranchResponseModel.builder()
-                                            .name(branchModel.getName())
-                                            .lastCommitSha(branchModel.getCommit().getSha())
-                                            .build()
-                                        ).collect(Collectors.toList())
+        return repoList.items().stream()
+                .filter(f -> !f.fork())
+                .map(value ->
+                        new RepoOwnerBranchesShaResponse(
+                                value.name(),
+                                value.owner().login(),
+                                gitRepoClient.getRepoBranNames(value.name(), username)
+                                    .stream()
+                                    .map(branchModel ->
+                                            new BranchResponseModel(
+                                                    branchModel.name(),
+                                                    branchModel.commit().sha())
+                                        )
+                                    .collect(Collectors.toList())
                         )
-                        .build()
                 ).collect(Collectors.toList());
     }
+
+
 }

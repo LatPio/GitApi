@@ -4,9 +4,12 @@ import com.example.GitApi.exeption.UserNotFoundException;
 import com.example.GitApi.model.requestModels.BranchModel;
 import com.example.GitApi.model.requestModels.GitHubSearchResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
 
 @Component
 public class GitRepoClient {
@@ -14,7 +17,7 @@ public class GitRepoClient {
     @Value("${token}")
     public String token;
 
-    private WebClient webClientBuilder;
+    private final WebClient webClientBuilder;
 
     public GitRepoClient(WebClient.Builder builder, @Value("${url}") String baseUrl) {
         this.webClientBuilder = builder.baseUrl(baseUrl).build();
@@ -33,13 +36,13 @@ public class GitRepoClient {
                 .bodyToMono(GitHubSearchResponse.class).block();
     }
 
-    public BranchModel[] getRepoBranNames(String repoName, String user){
+    public List<BranchModel> getRepoBranNames(String repoName, String user){
         return webClientBuilder
                 .get()
                 .uri("/repos/"+ user + "/"+ repoName + "/branches")
                 .header("Authorization", this.token )
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(BranchModel[].class).block();
+                .bodyToMono(new ParameterizedTypeReference<List<BranchModel>>() {}).block();
     }
 }

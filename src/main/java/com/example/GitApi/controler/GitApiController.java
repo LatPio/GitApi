@@ -21,6 +21,12 @@ public class GitApiController {
         return ResponseEntity.status(HttpStatus.OK).body(apiService.outResponse(userName));
     }
 
+    @GetMapping("/new")
+    public List<RepoOwnerBranchesShaResponse> getOutList2(
+            @RequestParam String userName){
+        return apiService.outResponse(userName);
+    }
+
 
 
 

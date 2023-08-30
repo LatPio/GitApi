@@ -1,19 +1,11 @@
 package com.example.GitApi.model.responseModels;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
-public class RepoOwnerBranchesShaResponse {
 
-    private String repository_name;
-    private String owner_login;
-    private List<BranchResponseModel> branches;
+public record RepoOwnerBranchesShaResponse(
+        String repositoryName,
+        String ownerLogin,
+        List<BranchResponseModel> branches
+) {
 }

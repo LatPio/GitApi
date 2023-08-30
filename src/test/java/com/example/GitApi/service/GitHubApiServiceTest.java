@@ -39,34 +39,17 @@ class GitHubApiServiceTest {
 
 
     private GitHubSearchResponse sampleDataRepositories(){
-        return GitHubSearchResponse.builder()
-                .total_count(1)
-                .items(
-                        List.of(RepositoryModel.builder()
-                                .name("Repo")
-                                        .fork(false)
-                                        .owner(GitHubOwner.builder().login("user").build())
-                                .build())
-                )
-                .build();
+        return new GitHubSearchResponse(1 ,
+                        List.of(new RepositoryModel("Repo", false, new GitHubOwner("user")))
+                );
     }
 
-    private BranchModel[] sampleBranch(){
-        return new BranchModel[]{BranchModel.builder()
-                .name("master")
-                .commit(CommitModel.builder()
-                        .sha("shasha")
-                        .build())
-                .build()};
+    private List<BranchModel> sampleBranch(){
+        return List.of(new BranchModel("master", new CommitModel("shasha")));
     }
 
     private RepoOwnerBranchesShaResponse sampleResponse(){
-        return RepoOwnerBranchesShaResponse.builder()
-                .repository_name("Repo")
-                .owner_login("user")
-                .branches(List.of(BranchResponseModel.builder()
-                        .name("master").lastCommitSha("shasha").build()))
-                .build();
+        return new RepoOwnerBranchesShaResponse("Repo", "user", List.of(new BranchResponseModel("master", "shasha")));
     }
 
 }

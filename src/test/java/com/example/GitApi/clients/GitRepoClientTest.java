@@ -7,9 +7,11 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import static junit.framework.TestCase.assertNotNull;
 
 class GitRepoClientTest {
 
@@ -29,15 +31,24 @@ class GitRepoClientTest {
                 .addHeader("Content-Type", "application/json")
                 .setBody("""
 						{
-							"total_count": "0",
-							"items": []
+							"totalCount": "1",
+							"items": [
+							    "name":"Repo1",
+							    "fork":"false",
+							    "owner": [
+							        "login" : "user"
+							    ]
+							]
 						}
 						"""
                 )
         );
-        GitHubSearchResponse data = gitRepoClient.getRepoListByUser("test");
-        assertNotNull(data);
-        assertThat(data.getTotal_count()).isEqualTo(0);
+        GitHubSearchResponse data = gitRepoClient.getRepoListByUser("user");
+        assertThat(data.totalCount()).isEqualTo(1);
+        assertThat(data.items().get(0).name()).isEqualTo("Repo1");
+        assertThat(data.items().get(0).fork()).isEqualTo(false);
+        assertThat(data.items().get(0).owner().login()).isEqualTo("user");
+
     }
 
 
@@ -52,16 +63,17 @@ class GitRepoClientTest {
                                    "name": "master",
                                    "commit": {
                                        "sha": "c8a91dfb0"
-                                   },
-                                   "protected": false
+                                   }
                                }
                            ]
                         """
                 )
         );
 
-        BranchModel[] data = gitRepoClient.getRepoBranNames("test", "test");
-        assertNotNull(data);
-        assertThat(data[0].getName()).isEqualTo("master");
+        List<BranchModel> data = gitRepoClient.getRepoBranNames("test", "user");
+        assertThat(data.get(0).name()).isEqualTo("master");
+        assertThat(data.get(0).commit().sha()).isEqualTo("c8a91dfb0");
+
+
     }
 }
