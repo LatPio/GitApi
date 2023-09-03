@@ -1,5 +1,7 @@
 package com.example.GitApi.clients;
 
+import com.example.GitApi.model.InRepos;
+import com.example.GitApi.model.OutBranch;
 import com.example.GitApi.model.requestModels.BranchModel;
 import com.example.GitApi.model.requestModels.GitHubSearchResponse;
 import okhttp3.mockwebserver.MockResponse;
@@ -69,11 +71,58 @@ class GitRepoClientTest {
                         """
                 )
         );
-
         List<BranchModel> data = gitRepoClient.getRepoBranNames("test", "user");
         assertThat(data.get(0).name()).isEqualTo("master");
         assertThat(data.get(0).commit().sha()).isEqualTo("c8a91dfb0");
+    }
 
+    @Test
+    void getRepoListByUserV2() {
+        server.enqueue(new MockResponse()
+                .setStatus("HTTP/1.1 200")
+                .addHeader("Content-Type", "application/json")
+                .setBody("""
+						[
+						{
+							"name": "Repo1",
+							"fork": "false",
+							"owner": {
+							        "login" : "user"
+							    }
+							
+						}
+						]
+						"""
+                )
+        );
+        List<InRepos>  data = gitRepoClient.getRepoListByUserV2("user");
+        assertThat(data.get(0).repositoryName()).isEqualTo("Repo1");
+        assertThat(data.get(0).fork()).isEqualTo(false);
+        assertThat(data.get(0).ownerLogin().login()).isEqualTo("user");
 
     }
+
+
+    @Test
+    void getRepoBranNamesV2() {
+        server.enqueue(new MockResponse()
+                .setStatus("HTTP/1.1 200")
+                .addHeader("Content-Type", "application/json")
+                .setBody("""
+                            [
+                               {
+                                   "name": "master",
+                                   "commit": {
+                                       "sha": "c8a91dfb0"
+                                   }
+                               }
+                           ]
+                        """
+                )
+        );
+        List<OutBranch> data = gitRepoClient.getRepoBranNamesV2("test", "user");
+        assertThat(data.get(0).branchName()).isEqualTo("master");
+        assertThat(data.get(0).lastCommit().sha()).isEqualTo("c8a91dfb0");
+    }
+
 }
